@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rerate Explorer v0.3</title>
+<title>Rerate Explorer v0.4</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--shadow:0 10px 30px rgba(16,24,40,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -29,7 +29,7 @@ button.primary{width:100%;border:0;border-radius:14px;background:var(--blue);col
 <body>
 <div class="wrap">
 <section class="hero">
-  <div class="eyebrow">Training prototype · v0.3</div>
+  <div class="eyebrow">Training prototype · v0.4</div>
   <h1>Rerate Explorer</h1>
   <p>Start with what the customer pays today. Explore current-plan combinations, discounts and an added line — then build the real rerate in MST.</p>
 </section>
@@ -58,15 +58,27 @@ button.primary{width:100%;border:0;border-radius:14px;background:var(--blue);col
 <section class="card">
   <div class="step">Step 2 · Discovery</div>
   <h2>Find the money</h2>
-  <p class="hint">These are the quick questions that can turn a normal upgrade into a rerate opportunity.</p>
+  <p class="hint">Start with what is already on the account, then decide whether to add the discounts that create the best rerate. The engine will always test a +1 phone-line option automatically.</p>
 
   <label>Does the account already have a FAN?</label>
   <div class="choices" data-group="fan"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div>
-  <div class="notice blue">FAN is tracked separately from Signature. In this prototype, FAN pricing is treated as the Premium 2.0 20% discount path.</div>
 
-  <label>Does the customer have / qualify for Signature savings?</label>
-  <div class="choices" data-group="signature"><button class="choice" data-v="yes">Yes / likely</button><button class="choice" data-v="no">No / unsure</button></div>
-  <div class="notice blue">Signature is the broader rerate path: eligible retired plans use the legacy 25% rule; current Premium 2.0 / Extra 2.0 / Value 2.0 use 20% / 15% / 10%. Verify eligibility before changing the account.</div>
+  <div id="fanAddBlock" class="hidden">
+    <label>Do we want to add a FAN if the customer qualifies?</label>
+    <div class="choices" data-group="addFan"><button class="choice" data-v="yes">Yes — explore it</button><button class="choice" data-v="no">No</button></div>
+    <div class="notice blue">FAN is a Premium-focused rerate path. For current Premium 2.0, this tool uses 20% off. Verify FAN eligibility before changing the account.</div>
+  </div>
+
+  <div id="sigBlock" class="hidden">
+    <label>Does the account already have Signature savings?</label>
+    <div class="choices" data-group="signature"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div>
+
+    <div id="sigAddBlock" class="hidden">
+      <label>Do we want to add Signature savings if the customer qualifies?</label>
+      <div class="choices" data-group="addSignature"><button class="choice" data-v="yes">Yes — explore it</button><button class="choice" data-v="no">No</button></div>
+      <div class="notice blue">Explore employer, union, student or other eligible Signature options. Current-plan logic: Premium 2.0 = 20%, Extra 2.0 = 15%, Value 2.0 = 10%.</div>
+    </div>
+  </div>
 
   <label>What AutoPay method are they using now?</label>
   <div class="choices four" data-group="ap">
@@ -75,24 +87,24 @@ button.primary{width:100%;border:0;border-radius:14px;background:var(--blue);col
     <button class="choice" data-v="credit">Credit card</button>
     <button class="choice" data-v="none">No AutoPay</button>
   </div>
-  <div id="apExplain" class="notice blue hidden"></div><div class="notice amber"><b>Rerate rule:</b> choose what they use today. The tool will automatically use bank account as the target AutoPay method when it searches new-plan options.</div>
 
+  <div id="apAddBlock" class="hidden">
+    <label>Do we want to improve AutoPay for the rerate?</label>
+    <div class="choices" data-group="improveAp"><button class="choice" data-v="yes">Yes — use bank</button><button class="choice" data-v="no">No — keep current</button></div>
+  </div>
+  <div id="apExplain" class="notice blue hidden"></div>
   <div id="legacyBlock">
     <label>Would rerating this retired plan cause the customer to lose HBO Max?</label>
     <div class="choices" data-group="max"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No / not included</button><button class="choice" data-v="unsure">Unsure</button></div>
     <div id="maxWarn" class="notice red hidden"><b>Don't ignore the lost benefit.</b> A cheaper rerate is not automatically better if the customer values included HBO Max. Call it out and compare the value before changing the plan.</div>
   </div>
-
-  <label>Could an additional phone line be useful if the account still stays near or below today's plan price?</label>
-  <div class="choices" data-group="addline"><button class="choice" data-v="yes">Yes — explore +1</button><button class="choice" data-v="no">No</button></div>
-
   <button class="primary" id="explore">Explore the rerate</button>
 </section>
 
 <section id="results" class="card result hidden">
   <div class="step">Rerate opportunities</div>
   <h2 style="margin-bottom:4px">What should the rep try in MST?</h2>
-  <p style="color:#c8d7e2;margin-top:0">The engine searches current plan combinations. MST is still the final account quote.</p>
+  <p style="color:#c8d7e2;margin-top:0">The engine searches current plan combinations and automatically checks a +1 phone-line option. MST is still the final account quote.</p>
   <div id="summary"></div>
   <div id="options"></div>
   <div id="maxResult" class="warningbox hidden"></div>
@@ -114,22 +126,49 @@ button.primary{width:100%;border:0;border-radius:14px;background:var(--blue);col
 </div>
 
 <script>
-const state={fan:null,signature:null,ap:null,max:null,addline:null};
+const state={fan:null,addFan:null,signature:null,addSignature:null,ap:null,improveAp:null,max:null};
 
 document.querySelectorAll('.choices').forEach(g=>{
   g.addEventListener('click',e=>{
     const b=e.target.closest('.choice'); if(!b)return;
     g.querySelectorAll('.choice').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); state[g.dataset.group]=b.dataset.v;
-    if(g.dataset.group==='max') document.getElementById('maxWarn').classList.toggle('hidden',b.dataset.v!=='yes');
-    if(g.dataset.group==='ap'){
+    b.classList.add('active');
+    const group=g.dataset.group;
+    state[group]=b.dataset.v;
+
+    if(group==='fan'){
+      const noFan=b.dataset.v==='no';
+      document.getElementById('fanAddBlock').classList.toggle('hidden',!noFan);
+      document.getElementById('sigBlock').classList.toggle('hidden',!noFan);
+      if(!noFan){
+        state.addFan=null; state.signature=null; state.addSignature=null;
+        document.getElementById('sigAddBlock').classList.add('hidden');
+      }
+    }
+    if(group==='addFan'){
+      // If we are choosing to add FAN, Signature is no longer part of this rerate path.
+      const usingFan=b.dataset.v==='yes';
+      document.getElementById('sigBlock').classList.toggle('hidden',usingFan);
+      if(usingFan){ state.signature=null; state.addSignature=null; document.getElementById('sigAddBlock').classList.add('hidden'); }
+    }
+    if(group==='signature'){
+      const noSig=b.dataset.v==='no';
+      document.getElementById('sigAddBlock').classList.toggle('hidden',!noSig);
+      if(!noSig) state.addSignature=null;
+    }
+    if(group==='max') document.getElementById('maxWarn').classList.toggle('hidden',b.dataset.v!=='yes');
+
+    if(group==='ap'){
       const copy={
-        bank:'Bank account: $10 per phone line AutoPay savings loaded.',
-        debit:'Debit card: $5 per phone line. Moving to bank account can create another $5/line of room.',
-        credit:'Credit card: $0 AutoPay savings in this tool. Bank account can create $10/line of room.',
-        none:'No AutoPay: $0. Bank account can create $10/line of room.'
+        bank:'Current AutoPay: bank account — already at $10 per phone line in this tool.',
+        debit:'Current AutoPay: debit card — $5 per phone line. Bank can create another $5/line.',
+        credit:'Current AutoPay: credit card — $0 per line. Bank can create $10/line.',
+        none:'Current AutoPay: none — $0 per line. Bank can create $10/line.'
       };
       const n=document.getElementById('apExplain'); n.textContent=copy[b.dataset.v]; n.classList.remove('hidden');
+      const canImprove=b.dataset.v!=='bank';
+      document.getElementById('apAddBlock').classList.toggle('hidden',!canImprove);
+      if(!canImprove) state.improveAp='no';
     }
   });
 });
@@ -181,16 +220,6 @@ function generateCombos(totalLines){
   }
   return a;
 }
-function currentLegacyImprovement(old,n,ap,hasSignature,oldPlan){
-  // Coaching estimate for named retired plans using the user's 25% Signature rule.
-  if(!['starterSL','premiumPL','extraEL'].includes(oldPlan)) return null;
-  let x=old;
-  const currentAP=AP_PER_LINE[ap]||0;
-  const bankGain=(10-currentAP)*n;
-  x=Math.max(0,x-bankGain);
-  if(hasSignature) x*=.75;
-  return x;
-}
 
 document.getElementById('explore').onclick=()=>{
   const old=parseFloat(document.getElementById('oldPrice').value);
@@ -199,15 +228,23 @@ document.getElementById('explore').onclick=()=>{
   if(!old||!n){alert('Enter the current plan price and number of phone lines first.');return}
   if(!state.ap){alert('Choose the current AutoPay payment method.');return}
   if(!state.fan){alert('Tell me whether the account already has a FAN.');return}
-  if(!state.signature){alert('Tell me whether the customer has or qualifies for Signature savings.');return}
+  if(state.fan==='no' && !state.addFan){alert('Tell me whether you want to add a FAN if they qualify.');return}
 
-  const hasFan = state.fan==='yes';
-  const hasSignature = state.signature==='yes';
-  const apTarget='bank'; // The rerate always tests the best AutoPay setup.
+  const hasFan = state.fan==='yes' || state.addFan==='yes';
+
+  if(!hasFan){
+    if(!state.signature){alert('Tell me whether the account already has Signature savings.');return}
+    if(state.signature==='no' && !state.addSignature){alert('Tell me whether you want to add Signature savings if they qualify.');return}
+  }
+  const hasSignature = !hasFan && (state.signature==='yes' || state.addSignature==='yes');
+
+  if(!state.ap){alert('Choose the customer\'s current AutoPay method.');return}
+  if(state.ap!=='bank' && !state.improveAp){alert('Tell me whether you want to improve AutoPay for the rerate.');return}
+  const apTarget = (state.ap!=='bank' && state.improveAp==='yes') ? 'bank' : state.ap;
   let all=[];
 
   const lineCounts=[n];
-  if(state.addline==='yes' && n<5) lineCounts.push(n+1);
+  if(n<5) lineCounts.push(n+1);
 
   lineCounts.forEach(total=>{
     generateCombos(total).forEach(counts=>{
@@ -218,18 +255,12 @@ document.getElementById('explore').onclick=()=>{
     });
   });
 
-  // Add a "keep the old plan, fix discounts" coaching option when we know the legacy math.
-  const legacyEstimate=currentLegacyImprovement(old,n,state.ap,hasSignature,oldPlan);
-  if(legacyEstimate!==null){
-    all.push({legacy:true,total:n,price:legacyEstimate,added:false,promoClass:oldPlan==='starterSL'?'starter-tier':'legacy'});
-  }
-
   // Prefer solutions that save, then those within $20 of current cost, and retain plan variety.
   all.sort((a,b)=>a.price-b.price);
   const candidates=[];
   const seen=new Set();
   for(const o of all){
-    const key=o.legacy?'legacy':`${o.total}-${o.counts.premium}-${o.counts.extra}-${o.counts.value}`;
+    const key=`${o.total}-${o.counts.premium}-${o.counts.extra}-${o.counts.value}`;
     if(seen.has(key))continue;
     if(o.price<=old+20){candidates.push(o);seen.add(key)}
   }
@@ -237,23 +268,24 @@ document.getElementById('explore').onclick=()=>{
   // Pick useful training options rather than only the absolute cheapest Value configuration.
   const useful=[];
   const pushFirst=(fn)=>{const x=candidates.find(fn); if(x&&!useful.includes(x)) useful.push(x)}
-  pushFirst(o=>!o.legacy && o.total===n && o.counts.premium===n);
-  pushFirst(o=>!o.legacy && o.total===n && o.counts.extra===n);
-  pushFirst(o=>!o.legacy && o.total===n && o.counts.value===n);
-  if(state.addline==='yes'){
-    pushFirst(o=>!o.legacy && o.total===n+1 && o.counts.premium===n && o.counts.value===1);
-    pushFirst(o=>!o.legacy && o.total===n+1 && o.counts.premium===n+1);
-    pushFirst(o=>!o.legacy && o.total===n+1 && o.counts.value===n+1);
+  pushFirst(o=>o.total===n && o.counts.premium===n);
+  pushFirst(o=>o.total===n && o.counts.extra===n);
+  pushFirst(o=>o.total===n && o.counts.value===n);
+  if(n<5){
+    pushFirst(o=>o.total===n+1 && o.counts.premium===n && o.counts.value===1);
+    pushFirst(o=>o.total===n+1 && o.counts.premium===n+1);
+    pushFirst(o=>o.total===n+1 && o.counts.value===n+1);
   }
-  pushFirst(o=>o.legacy);
   candidates.forEach(o=>{if(useful.length<7&&!useful.includes(o)) useful.push(o)});
 
   const best=useful.reduce((a,b)=>b.price<a.price?b:a,useful[0]||all[0]);
   const room=old-best.price;
   const currentApSavings=AP_PER_LINE[state.ap]||0;
-  const bankExtra=(10-currentApSavings)*n;
+  const targetApSavings=AP_PER_LINE[apTarget]||0;
+  const apExtra=(targetApSavings-currentApSavings)*n;
 
-  const apName={bank:'Bank account',debit:'Debit card',credit:'Credit card',none:'No AutoPay'}[state.ap];
+  const apNames={bank:'Bank account',debit:'Debit card',credit:'Credit card',none:'No AutoPay'};
+  const apName=apNames[state.ap], apTargetName=apNames[apTarget];
   document.getElementById('summary').innerHTML=`
     <div class="big">${room>=0?money(room):money(Math.abs(room))}/mo</div>
     <div class="save">${room>=0?'potential room found':'over current plan price'}</div>
@@ -261,26 +293,21 @@ document.getElementById('explore').onclick=()=>{
       <div class="metric"><small>Current plan-only price</small><b>${money(old)}</b></div>
       <div class="metric"><small>Lowest surfaced option</small><b>${money(best.price)}</b></div>
     </div>
-    <div class="tag">AutoPay path: ${apName} today → Bank account for rerate</div>
-    ${bankExtra>0?`<div class="tag">Current AutoPay → bank account creates up to ${money(bankExtra)}/mo more room across ${n} line${n===1?'':'s'}</div>`:`<div class="tag">Already using the best AutoPay setup in this tool: bank account</div>`}
+    <div class="tag">AutoPay path: ${apName} today → ${apTargetName} for rerate</div>
+    ${apExtra>0?`<div class="tag">AutoPay change creates ${money(apExtra)}/mo more room across ${n} line${n===1?'':'s'}</div>`:`<div class="tag">AutoPay unchanged for this rerate</div>`}
   `;
 
   document.getElementById('options').innerHTML=useful.map(o=>{
     let title,why;
-    if(o.legacy){
-      title='Keep current retired plan + fix discounts';
-      why=`Training estimate using the 25% Signature rule on an eligible older plan${state.ap!=='bank'?' plus moving AutoPay to bank':''}. FAN is not being treated as the legacy Signature discount. Verify in MST.`;
-    }else{
-      title=labelCounts(o.counts);
-      const bits=[];
-      if(o.added)bits.push('adds 1 phone line');
-      if(hasSignature) bits.push('Signature applied');
-      else if(hasFan && o.counts.premium>0) bits.push('FAN applied to Premium 2.0');
-      bits.push('bank AutoPay target');
-      if(o.promoClass==='best-trade')bits.push('contains Premium/Extra — check best trade eligibility in GTT/CCKM');
-      else bits.push('Value 2.0 may reduce some trade promos');
-      why=bits.join(' · ');
-    }
+    title=labelCounts(o.counts);
+    const bits=[];
+    if(o.added)bits.push('adds 1 phone line');
+    if(hasSignature) bits.push('Signature applied');
+    else if(hasFan && o.counts.premium>0) bits.push('FAN applied to Premium 2.0');
+    bits.push(`${apTargetName} AutoPay`);
+    if(o.promoClass==='best-trade')bits.push('contains Premium/Extra — check best trade eligibility in GTT/CCKM');
+    else bits.push('Value 2.0 may reduce some trade promos');
+    why=bits.join(' · ');
     const delta=old-o.price;
     return `<div class="option">
       <span class="price">${money(o.price)}/mo</span>
