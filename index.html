@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rerate Explorer v0.61</title>
+<title>Rerate Explorer v0.62</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--dark:#061d2d;--shadow:0 10px 30px rgba(16,24,40,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -19,11 +19,12 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 .addgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.add{border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;background:#fff}.add.on{border:2px solid var(--blue);background:var(--blue2);padding:11px}.add strong{display:block}.add span{font-size:13px;color:var(--muted)}.add input{margin-right:6px}
 .inline{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}.story{background:var(--dark);color:#fff;border-radius:16px;padding:16px;margin-top:14px}.story h3{margin:0 0 8px}.storyline{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.1)}.storyline:last-child{border:0}.positive{color:#86efac}.over{color:#fde68a}
 .footer{font-size:12px;color:var(--muted);line-height:1.45;margin-top:14px;text-align:center}
+.qtyCard{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.qtyHead{display:flex;justify-content:space-between;gap:12px;align-items:center}.qtyCtl{display:flex;align-items:center;gap:10px}.qtyBtn{width:34px;height:34px;border-radius:10px;border:1px solid #cfd5df;background:#fff;font-size:21px;font-weight:800;cursor:pointer}.qtyNum{min-width:26px;text-align:center;font-size:18px;font-weight:850}.instList{margin-top:10px;display:grid;gap:8px}.instRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}.instRow span{font-size:13px;font-weight:750}.micro{font-size:12px;color:var(--muted);line-height:1.35;margin-top:6px}
 @media(max-width:520px){.metrics{grid-template-columns:1fr}.addgrid{grid-template-columns:1fr}.hero h1{font-size:27px}}
 </style>
 </head>
 <body><div class="wrap">
-<section class="hero"><div class="eyebrow">Training prototype · v0.61</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
+<section class="hero"><div class="eyebrow">Training prototype · v0.62</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
 
 <section class="card">
 <div class="step">1 · Current account</div><h2>What are they paying now?</h2><p class="hint">Enter the current monthly plan/service price and the lines on the account. No installments, protection or taxes.</p>
@@ -61,17 +62,28 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 <div class="metrics"><div class="metric"><small>Original plan</small><b id="mOld">$0</b></div><div class="metric"><small>Selected rerate</small><b id="mNew">$0</b></div><div class="metric"><small>Plan savings</small><b id="mSave">$0</b></div></div>
 <div id="already" class="notice blue"></div>
 
-<h2 style="margin-top:20px">Add more value</h2><p class="hint">Check what makes sense for the customer. The running total compares everything to the original plan-only price.</p>
+<h2 style="margin-top:20px">Add more value</h2><p class="hint">Build what makes sense for the customer. Premium data discounts are allocated across existing + newly added data lines, highest service price first. The running total compares everything to the original service price.</p>
 <div class="addgrid">
 <label class="add"><input type="checkbox" data-add="pa1"> <strong>PA1</strong><span>+$19/mo</span></label>
 <label class="add"><input type="checkbox" data-add="htp"> <strong>HTP</strong><span>+$25/mo</span></label>
 <label class="add"><input type="checkbox" data-add="aia"> <strong>AIA</strong><span id="aiaPrice">Price follows rerate AutoPay</span></label>
-<label class="add"><input type="checkbox" data-add="watch"> <strong>Watch</strong><span id="watchPrice">Service + installment</span></label>
-<label class="add"><input type="checkbox" data-add="tablet"> <strong>Tablet</strong><span id="tabletPrice">Service + installment</span></label>
+<div class="qtyCard">
+  <div class="qtyHead">
+    <div><strong>Watch</strong><div id="watchPrice" class="micro">Service + installment</div></div>
+    <div class="qtyCtl"><button class="qtyBtn" type="button" data-qty="watch" data-dir="-1">−</button><span id="watchQty" class="qtyNum">0</span><button class="qtyBtn" type="button" data-qty="watch" data-dir="1">+</button></div>
+  </div>
+  <div id="watchInstList" class="instList hidden"></div>
+</div>
+<div class="qtyCard">
+  <div class="qtyHead">
+    <div><strong>Tablet</strong><div id="tabletPrice" class="micro">Service + installment</div></div>
+    <div class="qtyCtl"><button class="qtyBtn" type="button" data-qty="tablet" data-dir="-1">−</button><span id="tabletQty" class="qtyNum">0</span><button class="qtyBtn" type="button" data-qty="tablet" data-dir="1">+</button></div>
+  </div>
+  <div id="tabletInstList" class="instList hidden"></div>
+</div>
 
 </div>
-<div id="watchInstBlock" class="hidden"><label>Watch installment</label><div class="field"><span class="prefix">$</span><input id="watchInst" type="number" inputmode="decimal" value="0" step=".01"></div></div>
-<div id="tabInstBlock" class="hidden"><label>Tablet installment</label><div class="field"><span class="prefix">$</span><input id="tabInst" type="number" inputmode="decimal" value="0" step=".01"></div></div>
+
 
 <div class="story"><h3>What did we build?</h3><div id="story"></div></div>
 </section>
@@ -80,6 +92,7 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 
 <script>
 const S={fanType:null,appreciation:null,ap:null,useBank:null,max:null,post312:null,selected:null};
+const NEW={watch:0,tablet:0};
 const AP={bank:10,debit:5,credit:0,none:0};
 const APNAME={bank:'Bank account',debit:'Debit card',credit:'Credit card',none:'No AutoPay'};
 const BASE_BANK={premium:{1:90,2:80,3:65,4:50},extra:{1:70,2:60,3:50,4:40},value:{1:50,2:45,3:35,4:30}};
@@ -227,11 +240,35 @@ window.selectRerate=i=>{
 }
 $('continueValue').onclick=openBuilder;
 
-function dataDiscount(base){
- if(S.selected && S.selected.elite)return 0;
- if(S.selected && !S.selected.special55 && S.selected.c && S.selected.c.premium>0)return base*.5;
- if(S.appreciation==='yes')return base*.8;
- return base;
+function dataServiceTotalForSelection(sel,watches,tabs){
+ const watch=10.99,tab=20.99;
+ if(sel.special55){
+   // 55+ selected package does not currently model watch/tablet discounts.
+   return watches*watch + tabs*tab;
+ }
+ if(sel.elite){
+   // Elite 2.0: one watch free + one tablet free.
+   return Math.max(0,watches-1)*watch + Math.max(0,tabs-1)*tab;
+ }
+ const c=sel.c||{premium:0,extra:0,value:0};
+ let items=[
+   ...Array(tabs).fill({kind:'Tablet',base:tab}),
+   ...Array(watches).fill({kind:'Watch',base:watch})
+ ].sort((a,b)=>b.base-a.base);
+ let premiumSlots=Math.min(c.premium,items.length);
+ return items.reduce((sum,item,i)=>{
+   if(i<premiumSlots)return sum+item.base*.5;
+   if(S.appreciation==='yes')return sum+item.base*.8;
+   return sum+item.base;
+ },0);
+}
+function incrementalDataService(kind,newCount){
+ const baseW=parseInt($('watchLines').value)||0;
+ const baseT=parseInt($('tabletLines').value)||0;
+ const current=dataServiceTotalForSelection(S.selected,baseW,baseT);
+ const w=baseW+(kind==='watch'?newCount:0)+(kind==='both'?NEW.watch:0);
+ const t=baseT+(kind==='tablet'?newCount:0)+(kind==='both'?NEW.tablet:0);
+ return dataServiceTotalForSelection(S.selected,w,t)-current;
 }
 function aia(){
  if(S.selected && S.selected.special55)return 0;
@@ -251,18 +288,45 @@ function openBuilder(){
  aiaBox.disabled=!!o.special55;
  if(o.special55){aiaBox.checked=false;aiaBox.closest('.add').classList.remove('on');}
 
- $('watchPrice').textContent=`Service ${money(dataDiscount(10.99))}/mo + installment`;
- $('tabletPrice').textContent=`Service ${money(dataDiscount(20.99))}/mo + installment`;
+ NEW.watch=0; NEW.tablet=0; $('watchQty').textContent='0'; $('tabletQty').textContent='0';
+ $('watchInstList').innerHTML=''; $('tabletInstList').innerHTML='';
+ $('watchInstList').classList.add('hidden'); $('tabletInstList').classList.add('hidden');
+ updateDataLabels();
  $('builder').classList.remove('hidden');updateBuilder();$('builder').scrollIntoView({behavior:'smooth'});
 }
-document.querySelectorAll('[data-add]').forEach(x=>x.onchange=()=>{
- x.closest('.add').classList.toggle('on',x.checked);
- if(x.dataset.add==='watch')$('watchInstBlock').classList.toggle('hidden',!x.checked);
- if(x.dataset.add==='tablet')$('tabInstBlock').classList.toggle('hidden',!x.checked);
+document.querySelectorAll('[data-add]').forEach(x=>x.onchange=()=>{x.closest('.add').classList.toggle('on',x.checked);updateBuilder()});
+function checked(k){const el=document.querySelector(`[data-add="${k}"]`);return !!el&&el.checked}
+
+document.querySelectorAll('[data-qty]').forEach(btn=>btn.onclick=()=>{
+ const kind=btn.dataset.qty,dir=parseInt(btn.dataset.dir);
+ NEW[kind]=Math.max(0,Math.min(8,NEW[kind]+dir));
+ $(kind+'Qty').textContent=NEW[kind];
+ renderInstallments(kind);
+ updateDataLabels();
  updateBuilder();
 });
-['watchInst','tabInst'].forEach(id=>$(id).oninput=updateBuilder);
-function checked(k){return document.querySelector(`[data-add="${k}"]`).checked}
+function renderInstallments(kind){
+ const count=NEW[kind], list=$(kind==='watch'?'watchInstList':'tabletInstList');
+ const oldVals=[...list.querySelectorAll('input')].map(x=>x.value);
+ list.innerHTML='';
+ if(count===0){list.classList.add('hidden');return}
+ list.classList.remove('hidden');
+ for(let i=0;i<count;i++){
+   const row=document.createElement('div');row.className='instRow';
+   row.innerHTML=`<span>${kind==='watch'?'Watch':'Tablet'} ${i+1} installment</span><div class="field"><span class="prefix">$</span><input class="${kind}Inst" type="number" inputmode="decimal" value="${oldVals[i]??0}" step=".01"></div>`;
+   list.appendChild(row);
+ }
+ list.querySelectorAll('input').forEach(x=>x.oninput=updateBuilder);
+}
+function updateDataLabels(){
+ if(!S.selected)return;
+ const baseW=parseInt($('watchLines').value)||0,baseT=parseInt($('tabletLines').value)||0;
+ const base=dataServiceTotalForSelection(S.selected,baseW,baseT);
+ const watchOne=dataServiceTotalForSelection(S.selected,baseW+1,baseT)-base;
+ const tabOne=dataServiceTotalForSelection(S.selected,baseW,baseT+1)-base;
+ $('watchPrice').textContent=`Next watch changes service by ${money(watchOne)}/mo + installment`;
+ $('tabletPrice').textContent=`Next tablet changes service by ${money(tabOne)}/mo + installment`;
+}
 function updateBuilder(){
  if(!S.selected)return;
  const old=parseFloat($('oldPrice').value),base=S.selected.price;
@@ -270,8 +334,18 @@ function updateBuilder(){
  if(checked('pa1')){adds+=19;items.push(['PA1',19])}
  if(checked('htp')){adds+=25;items.push(['HTP',25])}
  if(checked('aia')){let x=aia();adds+=x;items.push(['AIA',x])}
- if(checked('watch')){let x=dataDiscount(10.99)+(parseFloat($('watchInst').value)||0);adds+=x;items.push(['Watch',x])}
- if(checked('tablet')){let x=dataDiscount(20.99)+(parseFloat($('tabInst').value)||0);adds+=x;items.push(['Tablet',x])}
+ const baseW=parseInt($('watchLines').value)||0,baseT=parseInt($('tabletLines').value)||0;
+ if(NEW.watch||NEW.tablet){
+   const currentData=dataServiceTotalForSelection(S.selected,baseW,baseT);
+   const newData=dataServiceTotalForSelection(S.selected,baseW+NEW.watch,baseT+NEW.tablet);
+   const serviceDelta=newData-currentData;
+   const watchInst=[...document.querySelectorAll('.watchInst')].reduce((s,x)=>s+(parseFloat(x.value)||0),0);
+   const tabInst=[...document.querySelectorAll('.tabletInst')].reduce((s,x)=>s+(parseFloat(x.value)||0),0);
+   adds+=serviceDelta+watchInst+tabInst;
+   items.push([`Added data service (${NEW.watch} watch${NEW.watch===1?'':'es'}, ${NEW.tablet} tablet${NEW.tablet===1?'':'s'})`,serviceDelta]);
+   if(watchInst)items.push(['Watch installment(s)',watchInst]);
+   if(tabInst)items.push(['Tablet installment(s)',tabInst]);
+ }
  const final=base+adds,room=old-final;
  $('roomAmount').textContent=money(Math.abs(room));
  $('roomCaption').textContent=room>=0?'SAVINGS REMAINING':'ADDITIONAL CUSTOMER INVESTMENT';
