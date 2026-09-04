@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rerate Explorer v0.64</title>
+<title>Rerate Explorer v0.65</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--dark:#061d2d;--shadow:0 10px 30px rgba(16,24,40,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -25,12 +25,12 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 </style>
 </head>
 <body><div class="wrap">
-<section class="hero"><div class="eyebrow">Training prototype · v0.64</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
+<section class="hero"><div class="eyebrow">Training prototype · v0.65</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
 
 <section class="card">
 <div class="step">1 · Current account</div><h2>What are they paying now?</h2><p class="hint">Enter the current monthly plan/service price and the lines on the account. No installments, protection or taxes.</p>
 <label>Current plan / service price</label><div class="field"><span class="prefix">$</span><input id="oldPrice" type="number" inputmode="decimal" placeholder="167.97" step=".01"></div>
-<label>Phone lines</label><div class="field"><select id="lines"><option value="">Select</option><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+<label>Phone lines</label><div class="field"><select id="lines"><option value="" selected>Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
 <div class="inline">
 <div><label>Watch lines</label><div class="field"><select id="watchLines"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div></div>
 <div><label>Tablet lines</label><div class="field"><select id="tabletLines"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div></div>
@@ -385,7 +385,7 @@ $('resetBtn').onclick=()=>{
 
  // Inputs
  $('oldPrice').value='';
- $('lines').value='3';
+ $('lines').value='';
  $('watchLines').value='0';
  $('tabletLines').value='0';
 
