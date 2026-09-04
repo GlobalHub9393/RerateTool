@@ -1,333 +1,205 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rerate Explorer v0.4</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rerate Explorer v0.5</title>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--shadow:0 10px 30px rgba(16,24,40,.08)}
+:root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--dark:#061d2d;--shadow:0 10px 30px rgba(16,24,40,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-.wrap{max-width:780px;margin:auto;padding:18px 14px 60px}.hero{background:linear-gradient(135deg,#052e4f,#0676bd);color:#fff;padding:22px;border-radius:22px;box-shadow:var(--shadow)}
-.eyebrow{font-size:12px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;opacity:.8}.hero h1{margin:5px 0 7px;font-size:30px}.hero p{margin:0;line-height:1.45;opacity:.92}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px;box-shadow:var(--shadow)}
-.step{font-size:12px;font-weight:850;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}.card h2{font-size:20px;margin:5px 0 6px}.hint{font-size:14px;color:var(--muted);line-height:1.45;margin:0 0 15px}
-label{display:block;font-size:13px;font-weight:780;margin:13px 0 6px}.field{display:flex;align-items:center;border:1px solid #cfd5df;border-radius:13px;background:#fff;overflow:hidden}.prefix{padding-left:14px;font-weight:850;color:#475467}
-.field input,.field select{width:100%;border:0;outline:0;font-size:17px;padding:13px;background:transparent;color:var(--ink)}
-.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choice{border:1px solid #cfd5df;background:#fff;border-radius:13px;padding:12px 9px;font-weight:750;font-size:14px;text-align:center;cursor:pointer}
-.choice.active{border:2px solid var(--blue);background:var(--blue2);color:#034b7b;padding:11px 8px}.choices.four{grid-template-columns:repeat(2,1fr)}
-.hidden{display:none!important}.notice{border-radius:14px;padding:12px 13px;margin-top:12px;font-size:14px;line-height:1.42}.notice.blue{background:var(--blue2);color:#074d7d}.notice.amber{background:var(--amberbg);color:#7a2e0e}.notice.red{background:var(--redbg);color:#8a1c13}
-button.primary{width:100%;border:0;border-radius:14px;background:var(--blue);color:#fff;font-size:16px;font-weight:850;padding:14px;margin-top:16px;cursor:pointer}
-.result{background:#061d2d;color:#fff;border:0}.result .step{color:#7dd3fc}.big{font-size:38px;font-weight:880;margin:8px 0 0}.save{display:inline-block;background:#d1fadf;color:#05603a;font-weight:850;border-radius:999px;padding:7px 10px;margin-top:8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.metric{background:rgba(255,255,255,.08);border-radius:14px;padding:12px}.metric small{display:block;color:#b8c7d2;margin-bottom:3px}.metric b{font-size:18px}
-.option{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.045);border-radius:15px;padding:13px;margin-top:10px}.option strong{font-size:16px}.option .price{float:right;color:#86efac;font-weight:880}.option .sub{font-size:13px;color:#b8c7d2;margin-top:5px;line-height:1.35}
-.tag{display:inline-block;font-size:11px;font-weight:850;border-radius:999px;padding:5px 7px;margin-top:8px;background:rgba(125,211,252,.12);color:#bae6fd}
-.warningbox{border:1px solid #f79009;background:#3b2a0f;color:#fde68a;border-radius:14px;padding:12px;margin-top:12px;font-size:13px;line-height:1.4}
-.logic{font-size:13px;color:var(--muted);line-height:1.55}.logic b{color:var(--ink)}.footer{font-size:12px;color:var(--muted);line-height:1.45;margin-top:14px;text-align:center}
-@media(max-width:480px){.hero h1{font-size:27px}.grid{grid-template-columns:1fr}.choices.four{grid-template-columns:1fr 1fr}}
+.wrap{max-width:800px;margin:auto;padding:18px 14px 70px}.hero{background:linear-gradient(135deg,#052e4f,#0676bd);color:#fff;padding:22px;border-radius:22px;box-shadow:var(--shadow)}
+.eyebrow,.step{font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.eyebrow{opacity:.8}.step{color:var(--blue)}.hero h1{margin:5px 0 7px;font-size:30px}.hero p{margin:0;line-height:1.45;opacity:.92}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px;box-shadow:var(--shadow)}.card h2{font-size:20px;margin:5px 0 6px}.hint{font-size:14px;color:var(--muted);line-height:1.45;margin:0 0 15px}
+label{display:block;font-size:13px;font-weight:780;margin:13px 0 6px}.field{display:flex;align-items:center;border:1px solid #cfd5df;border-radius:13px;background:#fff;overflow:hidden}.prefix{padding-left:14px;font-weight:850;color:#475467}.field input,.field select{width:100%;border:0;outline:0;font-size:17px;padding:13px;background:transparent;color:var(--ink)}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choice{border:1px solid #cfd5df;background:#fff;border-radius:13px;padding:12px 9px;font-weight:750;font-size:14px;text-align:center;cursor:pointer}.choice.active{border:2px solid var(--blue);background:var(--blue2);color:#034b7b;padding:11px 8px}
+.hidden{display:none!important}.notice{border-radius:14px;padding:12px 13px;margin-top:12px;font-size:14px;line-height:1.42}.blue{background:var(--blue2);color:#074d7d}.amber{background:var(--amberbg);color:#7a2e0e}.red{background:var(--redbg);color:#8a1c13}
+button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(--blue);color:#fff;font-size:16px;font-weight:850;padding:14px;margin-top:16px;cursor:pointer}.selectBtn{margin-top:10px;padding:11px;font-size:14px}
+.results{background:var(--dark);color:#fff;border:0}.results .step{color:#7dd3fc}.option{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);border-radius:16px;padding:14px;margin-top:10px}.option.best{border:2px solid #86efac;background:rgba(134,239,172,.08)}.option h3{margin:0 0 4px;font-size:17px}.price{font-size:24px;font-weight:880;color:#86efac}.sub{font-size:13px;color:#c4d3dd;line-height:1.4}.badge{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;letter-spacing:.06em;margin-bottom:8px;background:#d1fadf;color:#05603a}.valuewarn{margin-top:9px;padding:9px;border-radius:10px;background:#3b2a0f;color:#fde68a;font-size:12px;line-height:1.4}
+.builder{border:2px solid #bae6fd}.moneyHero{text-align:center;padding:10px 0}.moneyHero .amount{font-size:42px;font-weight:900;color:var(--green)}.moneyHero .caption{font-size:13px;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.metric{border:1px solid var(--line);border-radius:13px;padding:10px}.metric small{display:block;color:var(--muted);font-size:11px}.metric b{font-size:17px}
+.addgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.add{border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;background:#fff}.add.on{border:2px solid var(--blue);background:var(--blue2);padding:11px}.add strong{display:block}.add span{font-size:13px;color:var(--muted)}.add input{margin-right:6px}
+.inline{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}.story{background:var(--dark);color:#fff;border-radius:16px;padding:16px;margin-top:14px}.story h3{margin:0 0 8px}.storyline{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.1)}.storyline:last-child{border:0}.positive{color:#86efac}.over{color:#fde68a}
+.footer{font-size:12px;color:var(--muted);line-height:1.45;margin-top:14px;text-align:center}
+@media(max-width:520px){.metrics{grid-template-columns:1fr}.addgrid{grid-template-columns:1fr}.hero h1{font-size:27px}}
 </style>
 </head>
-<body>
-<div class="wrap">
-<section class="hero">
-  <div class="eyebrow">Training prototype · v0.4</div>
-  <h1>Rerate Explorer</h1>
-  <p>Start with what the customer pays today. Explore current-plan combinations, discounts and an added line — then build the real rerate in MST.</p>
+<body><div class="wrap">
+<section class="hero"><div class="eyebrow">Training prototype · v0.5</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
+
+<section class="card">
+<div class="step">1 · Current account</div><h2>What are they paying now?</h2><p class="hint">Plan/service only. Don't include device installments, insurance, taxes or features.</p>
+<label>Current plan price</label><div class="field"><span class="prefix">$</span><input id="oldPrice" type="number" inputmode="decimal" placeholder="167.97" step=".01"></div>
+<label>Phone lines</label><div class="field"><select id="lines"><option value="">Select</option><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+<label>Current / retired plan</label><div class="field"><select id="oldPlan"><option value="unknown">Unknown / other</option><option value="starterSL">Starter SL</option><option value="premiumPL">Premium PL</option><option value="extraEL">Extra EL</option><option value="eliteMax">Unlimited Elite / HBO Max plan</option><option value="currentPremium">Premium 2.0</option><option value="currentExtra">Extra 2.0</option><option value="currentValue">Value 2.0</option></select></div>
 </section>
 
 <section class="card">
-  <div class="step">Step 1 · Current account</div>
-  <h2>What are we starting with?</h2>
-  <p class="hint">Enter the current <b>plan/service only</b> amount. Don't include installments, insurance, taxes or features.</p>
-  <label>Current plan price</label>
-  <div class="field"><span class="prefix">$</span><input id="oldPrice" type="number" inputmode="decimal" placeholder="167.97" step=".01"></div>
-  <label>Phone lines</label>
-  <div class="field"><select id="lines"><option value="">Select lines</option><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
-  <label>Current / retired plan (helps with coaching)</label>
-  <div class="field"><select id="oldPlan">
-    <option value="unknown">Unknown / other legacy plan</option>
-    <option value="starterSL">Starter SL</option>
-    <option value="premiumPL">Premium PL</option>
-    <option value="extraEL">Extra EL</option>
-    <option value="eliteMax">Elite / plan with HBO Max</option>
-    <option value="currentPremium">Premium 2.0</option>
-    <option value="currentExtra">Extra 2.0</option>
-    <option value="currentValue">Value 2.0</option>
-  </select></div>
+<div class="step">2 · Discovery</div><h2>Find the rerate</h2>
+<label>Does the customer qualify for a FAN?</label><div class="choices" data-group="fan"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div>
+<div id="sigBlock" class="hidden"><label>If no FAN, do they qualify for Signature savings?</label><div class="choices" data-group="sig"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No / unsure</button></div></div>
+<label>Current AutoPay method</label><div class="choices" data-group="ap"><button class="choice" data-v="bank">Bank · $10/line</button><button class="choice" data-v="debit">Debit · $5/line</button><button class="choice" data-v="credit">Credit · $0</button><button class="choice" data-v="none">No AP · $0</button></div>
+<div id="apImprove" class="hidden"><label>Use bank AutoPay for the rerate?</label><div class="choices" data-group="useBank"><button class="choice" data-v="yes">Yes — maximize savings</button><button class="choice" data-v="no">No — keep current</button></div></div>
+<div id="legacyBlock"><label>Will the customer lose included HBO Max by leaving this plan?</label><div class="choices" data-group="max"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button><button class="choice" data-v="unsure">Unsure</button></div></div>
+<button id="findBtn" class="primary">Find rerates</button>
 </section>
 
-<section class="card">
-  <div class="step">Step 2 · Discovery</div>
-  <h2>Find the money</h2>
-  <p class="hint">Start with what is already on the account, then decide whether to add the discounts that create the best rerate. The engine will always test a +1 phone-line option automatically.</p>
+<section id="results" class="card results hidden"><div class="step">3 · Opportunities</div><h2>Top-down rerates to explore</h2><p class="sub">Premium first. +1 line is searched automatically. Value is treated as a price play, not the default winner.</p><div id="optionList"></div></section>
 
-  <label>Does the account already have a FAN?</label>
-  <div class="choices" data-group="fan"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div>
-
-  <div id="fanAddBlock" class="hidden">
-    <label>Do we want to add a FAN if the customer qualifies?</label>
-    <div class="choices" data-group="addFan"><button class="choice" data-v="yes">Yes — explore it</button><button class="choice" data-v="no">No</button></div>
-    <div class="notice blue">FAN is a Premium-focused rerate path. For current Premium 2.0, this tool uses 20% off. Verify FAN eligibility before changing the account.</div>
-  </div>
-
-  <div id="sigBlock" class="hidden">
-    <label>Does the account already have Signature savings?</label>
-    <div class="choices" data-group="signature"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div>
-
-    <div id="sigAddBlock" class="hidden">
-      <label>Do we want to add Signature savings if the customer qualifies?</label>
-      <div class="choices" data-group="addSignature"><button class="choice" data-v="yes">Yes — explore it</button><button class="choice" data-v="no">No</button></div>
-      <div class="notice blue">Explore employer, union, student or other eligible Signature options. Current-plan logic: Premium 2.0 = 20%, Extra 2.0 = 15%, Value 2.0 = 10%.</div>
-    </div>
-  </div>
-
-  <label>What AutoPay method are they using now?</label>
-  <div class="choices four" data-group="ap">
-    <button class="choice" data-v="bank">Bank account</button>
-    <button class="choice" data-v="debit">Debit card</button>
-    <button class="choice" data-v="credit">Credit card</button>
-    <button class="choice" data-v="none">No AutoPay</button>
-  </div>
-
-  <div id="apAddBlock" class="hidden">
-    <label>Do we want to improve AutoPay for the rerate?</label>
-    <div class="choices" data-group="improveAp"><button class="choice" data-v="yes">Yes — use bank</button><button class="choice" data-v="no">No — keep current</button></div>
-  </div>
-  <div id="apExplain" class="notice blue hidden"></div>
-  <div id="legacyBlock">
-    <label>Would rerating this retired plan cause the customer to lose HBO Max?</label>
-    <div class="choices" data-group="max"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No / not included</button><button class="choice" data-v="unsure">Unsure</button></div>
-    <div id="maxWarn" class="notice red hidden"><b>Don't ignore the lost benefit.</b> A cheaper rerate is not automatically better if the customer values included HBO Max. Call it out and compare the value before changing the plan.</div>
-  </div>
-  <button class="primary" id="explore">Explore the rerate</button>
+<section id="valueSafety" class="card hidden"><div class="step">Value 2.0 safeguard</div><h2>Existing device promotions</h2><p class="hint">This check appears only because a Value 2.0 rerate was selected.</p>
+<label>Does any affected line have an installment that started after 3/12/26?</label><div class="choices" data-group="post312"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button><button class="choice" data-v="unsure">Unsure</button></div>
+<div id="valueBlock" class="notice red hidden"><b>Stop and review the installments.</b> Moving an affected line to Value 2.0 can cause existing trade-in promotional credits to be lost. Verify before continuing.</div>
+<button id="continueValue" class="primary hidden">I reviewed it — continue to calculator</button>
 </section>
 
-<section id="results" class="card result hidden">
-  <div class="step">Rerate opportunities</div>
-  <h2 style="margin-bottom:4px">What should the rep try in MST?</h2>
-  <p style="color:#c8d7e2;margin-top:0">The engine searches current plan combinations and automatically checks a +1 phone-line option. MST is still the final account quote.</p>
-  <div id="summary"></div>
-  <div id="options"></div>
-  <div id="maxResult" class="warningbox hidden"></div>
-</section>
+<section id="builder" class="card builder hidden">
+<div class="step">4 · Build the value</div><h2 id="builderTitle">Selected rerate</h2>
+<div class="moneyHero"><div id="roomAmount" class="amount">$0</div><div id="roomCaption" class="caption">ROOM CREATED</div></div>
+<div class="metrics"><div class="metric"><small>Original plan</small><b id="mOld">$0</b></div><div class="metric"><small>Selected rerate</small><b id="mNew">$0</b></div><div class="metric"><small>Plan savings</small><b id="mSave">$0</b></div></div>
+<div id="already" class="notice blue"></div>
 
-<section class="card">
-  <div class="step">Logic loaded</div>
-  <h2>What this prototype knows</h2>
-  <div class="logic">
-    <b>AutoPay:</b> rep selects what the customer uses today. The rerate search automatically tests bank account as the target: bank = $10/phone line; debit = $5/line; credit card = $0; none = $0.<br>
-    <b>FAN:</b> separate from Signature; this prototype treats FAN as the Premium 2.0 20% discount path.<br>
-    <b>Signature:</b> eligible retired plans (Premium PL, Extra EL, Starter SL) = 25%; Premium 2.0 = 20%; Extra 2.0 = 15%; Value 2.0 = 10%.<br>
-    <b>Current plans:</b> Premium 2.0, Extra 2.0 and Value 2.0 can be mixed by line. Pricing is stored by total phone-line count and the engine tests combinations automatically.<br>
-    <b>Legacy safeguard:</b> HBO Max loss is surfaced before a “cheaper” rerate is treated as a win.
-  </div>
-</section>
+<h2 style="margin-top:20px">Add more value</h2><p class="hint">Check what makes sense for the customer. The running total compares everything to the original plan-only price.</p>
+<div class="addgrid">
+<label class="add"><input type="checkbox" data-add="pa1"> <strong>PA1</strong><span>+$19/mo</span></label>
+<label class="add"><input type="checkbox" data-add="htp"> <strong>HTP</strong><span>+$25/mo</span></label>
+<label class="add"><input type="checkbox" data-add="aia"> <strong>AIA</strong><span id="aiaPrice">Price follows rerate AutoPay</span></label>
+<label class="add"><input type="checkbox" data-add="watch"> <strong>Watch</strong><span id="watchPrice">Service + installment</span></label>
+<label class="add"><input type="checkbox" data-add="tablet"> <strong>Tablet</strong><span id="tabletPrice">Service + installment</span></label>
+<label class="add"><input type="checkbox" data-add="installment"> <strong>Other installment</strong><span>Variable monthly amount</span></label>
+</div>
+<div class="inline"><div><label>Watch installment</label><div class="field"><span class="prefix">$</span><input id="watchInst" type="number" inputmode="decimal" value="0" step=".01"></div></div><div><label>Tablet installment</label><div class="field"><span class="prefix">$</span><input id="tabInst" type="number" inputmode="decimal" value="0" step=".01"></div></div></div>
+<label>Other installment amount</label><div class="field"><span class="prefix">$</span><input id="otherInst" type="number" inputmode="decimal" value="0" step=".01"></div>
 
-<div class="footer">Training/exploration only. Verify plan eligibility, Signature/FAN enrollment, benefits, promotional eligibility and the final monthly quote in approved AT&T systems before presenting changes.</div>
+<div class="story"><h3>What did we build?</h3><div id="story"></div></div>
+</section>
+<div class="footer">Training/exploration only. Final plan pricing, discounts, HBO Max impact, installments, promotional credits and account eligibility must be verified in MST/OPUS/CCKM.</div>
 </div>
 
 <script>
-const state={fan:null,addFan:null,signature:null,addSignature:null,ap:null,improveAp:null,max:null};
+const S={fan:null,sig:null,ap:null,useBank:null,max:null,post312:null,selected:null};
+const AP={bank:10,debit:5,credit:0,none:0};
+const APNAME={bank:'Bank account',debit:'Debit card',credit:'Credit card',none:'No AutoPay'};
+const BASE_BANK={premium:{1:90,2:80,3:65,4:50,5:45.99},extra:{1:70,2:60,3:50,4:40,5:35.99},value:{1:50,2:45,3:35,4:30,5:30.99}};
+const SIG={premium:.20,extra:.15,value:.10};
+const LABEL={premium:'Premium 2.0',extra:'Extra 2.0',value:'Value 2.0'};
+const retired=new Set(['unknown','starterSL','premiumPL','extraEL','eliteMax']);
+const $=id=>document.getElementById(id), money=n=>'$'+Number(n).toFixed(2).replace(/\.00$/,'');
 
-document.querySelectorAll('.choices').forEach(g=>{
-  g.addEventListener('click',e=>{
-    const b=e.target.closest('.choice'); if(!b)return;
-    g.querySelectorAll('.choice').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    const group=g.dataset.group;
-    state[group]=b.dataset.v;
-
-    if(group==='fan'){
-      const noFan=b.dataset.v==='no';
-      document.getElementById('fanAddBlock').classList.toggle('hidden',!noFan);
-      document.getElementById('sigBlock').classList.toggle('hidden',!noFan);
-      if(!noFan){
-        state.addFan=null; state.signature=null; state.addSignature=null;
-        document.getElementById('sigAddBlock').classList.add('hidden');
-      }
-    }
-    if(group==='addFan'){
-      // If we are choosing to add FAN, Signature is no longer part of this rerate path.
-      const usingFan=b.dataset.v==='yes';
-      document.getElementById('sigBlock').classList.toggle('hidden',usingFan);
-      if(usingFan){ state.signature=null; state.addSignature=null; document.getElementById('sigAddBlock').classList.add('hidden'); }
-    }
-    if(group==='signature'){
-      const noSig=b.dataset.v==='no';
-      document.getElementById('sigAddBlock').classList.toggle('hidden',!noSig);
-      if(!noSig) state.addSignature=null;
-    }
-    if(group==='max') document.getElementById('maxWarn').classList.toggle('hidden',b.dataset.v!=='yes');
-
-    if(group==='ap'){
-      const copy={
-        bank:'Current AutoPay: bank account — already at $10 per phone line in this tool.',
-        debit:'Current AutoPay: debit card — $5 per phone line. Bank can create another $5/line.',
-        credit:'Current AutoPay: credit card — $0 per line. Bank can create $10/line.',
-        none:'Current AutoPay: none — $0 per line. Bank can create $10/line.'
-      };
-      const n=document.getElementById('apExplain'); n.textContent=copy[b.dataset.v]; n.classList.remove('hidden');
-      const canImprove=b.dataset.v!=='bank';
-      document.getElementById('apAddBlock').classList.toggle('hidden',!canImprove);
-      if(!canImprove) state.improveAp='no';
-    }
-  });
+document.querySelectorAll('.choices').forEach(g=>g.onclick=e=>{
+ const b=e.target.closest('.choice');if(!b)return;
+ g.querySelectorAll('.choice').forEach(x=>x.classList.remove('active'));b.classList.add('active');S[g.dataset.group]=b.dataset.v;
+ if(g.dataset.group==='fan') $('sigBlock').classList.toggle('hidden',b.dataset.v!=='no');
+ if(g.dataset.group==='ap'){const improve=b.dataset.v!=='bank';$('apImprove').classList.toggle('hidden',!improve);if(!improve)S.useBank='no'}
+ if(g.dataset.group==='max'&&b.dataset.v==='yes'){}
+ if(g.dataset.group==='post312'){
+   $('valueBlock').classList.toggle('hidden',b.dataset.v==='no');
+   $('continueValue').classList.toggle('hidden',b.dataset.v!=='no');
+ }
 });
+$('oldPlan').onchange=e=>$('legacyBlock').classList.toggle('hidden',!retired.has(e.target.value));
 
-const retired = new Set(['starterSL','premiumPL','extraEL','eliteMax','unknown']);
-document.getElementById('oldPlan').addEventListener('change',e=>{
-  document.getElementById('legacyBlock').classList.toggle('hidden',!retired.has(e.target.value));
-});
-
-// Internal current-plan pricing database.
-// Values below are the per-line prices WITH a $10/line bank AutoPay discount,
-// BEFORE Signature Savings. The engine reconstructs the standard rate and then
-// applies the user's selected AutoPay method and Signature percentage.
-const CURRENT_PLAN_BANK_AP = {
-  premium: {1:90, 2:80, 3:65, 4:50, 5:45.99},
-  extra:   {1:70, 2:60, 3:50, 4:40, 5:35.99},
-  value:   {1:50, 2:45, 3:35, 4:30, 5:30.99}
-};
-const PLAN_LABEL={premium:'Premium 2.0',extra:'Extra 2.0',value:'Value 2.0'};
-const SIG_PCT={premium:.20,extra:.15,value:.10};
-const AP_PER_LINE={bank:10,debit:5,credit:0,none:0};
-
-function money(n){return '$'+Number(n).toFixed(2).replace(/\.00$/,'')}
-function discountPctFor(plan, hasFan, hasSignature){
-  // Keep FAN and Signature as separate concepts.
-  // Signature: Premium 20%, Extra 15%, Value 10%.
-  // FAN: prototype applies the 20% Premium 2.0 path only.
-  if(hasSignature) return SIG_PCT[plan] || 0;
-  if(hasFan && plan==='premium') return .20;
-  return 0;
+function targetAP(){return S.ap!=='bank'&&S.useBank==='yes'?'bank':S.ap}
+function disc(plan){if(S.fan==='yes')return plan==='premium'?.20:0;if(S.sig==='yes')return SIG[plan]||0;return 0}
+function perLine(plan,n){let standard=BASE_BANK[plan][n]+10;return (standard-AP[targetAP()])*(1-disc(plan))}
+function total(c,n){return c.premium*perLine('premium',n)+c.extra*perLine('extra',n)+c.value*perLine('value',n)}
+function title(c){return ['premium','extra','value'].filter(p=>c[p]).map(p=>`${c[p]} ${LABEL[p]}`).join(' + ')}
+function hasValue(c){return c.value>0}
+function rank(o,old,n){
+ let score=0;
+ if(o.c.premium>0)score+=80;
+ if(o.c.premium===o.n)score+=30;
+ if(o.c.extra>0)score+=35;
+ if(o.n===n+1)score+=45;
+ if(o.n===n+1&&o.c.premium===n&&o.c.value===1)score+=55;
+ if(o.price<=old)score+=40+Math.min(25,old-o.price);
+ if(o.price<=old+10)score+=15;
+ if(o.c.value===o.n)score-=70;
+ return score;
 }
-function currentLinePrice(plan,totalLines,ap,hasFan,hasSignature){
-  const bankPrice=CURRENT_PLAN_BANK_AP[plan][totalLines];
-  const standard=bankPrice+10; // rebuild price before AutoPay
-  const afterAP=standard-(AP_PER_LINE[ap]||0);
-  const pct=discountPctFor(plan,hasFan,hasSignature);
-  return afterAP*(1-pct);
+function candidates(n,old){
+ let arr=[];
+ [n,...(n<5?[n+1]:[])].forEach(N=>{
+   for(let p=0;p<=N;p++)for(let e=0;e<=N-p;e++){let v=N-p-e,c={premium:p,extra:e,value:v};arr.push({c,n:N,price:total(c,N)})}
+ });
+ arr.forEach(o=>o.score=rank(o,old,n));arr.sort((a,b)=>b.score-a.score);
+ let chosen=[];
+ const pick=fn=>{let x=arr.find(fn);if(x&&!chosen.includes(x))chosen.push(x)}
+ pick(o=>o.n===n&&o.c.premium===n);
+ if(n<5)pick(o=>o.n===n+1&&o.c.premium===n&&o.c.value===1);
+ pick(o=>o.n===n&&o.c.extra===n);
+ if(n<5)pick(o=>o.n===n+1&&o.c.premium===n+1);
+ pick(o=>o.n===n&&o.c.value===n);
+ arr.forEach(o=>{if(chosen.length<6&&!chosen.includes(o)&&o.price<=old+20)chosen.push(o)});
+ return chosen;
 }
-function planTotal(counts,totalLines,ap,hasFan,hasSignature){
-  return ['premium','extra','value'].reduce((sum,p)=>sum+(counts[p]||0)*currentLinePrice(p,totalLines,ap,hasFan,hasSignature),0);
+$('findBtn').onclick=()=>{
+ const old=parseFloat($('oldPrice').value),n=parseInt($('lines').value);
+ if(!old||!n)return alert('Enter current plan price and phone lines.');
+ if(!S.fan)return alert('Does the customer qualify for a FAN?');
+ if(S.fan==='no'&&!S.sig)return alert('Answer the Signature question.');
+ if(!S.ap)return alert('Choose current AutoPay.');
+ if(S.ap!=='bank'&&!S.useBank)return alert('Choose whether to use bank AutoPay for the rerate.');
+ const opts=candidates(n,old);
+ $('optionList').innerHTML=opts.map((o,i)=>{
+  const delta=old-o.price, value=hasValue(o.c);
+  const added=o.n>n;
+  return `<div class="option ${i===0?'best':''}">
+   ${i===0?'<div class="badge">BEST OPPORTUNITY</div>':''}
+   <h3>${title(o.c)}</h3><div class="price">${money(o.price)}/mo</div>
+   <div class="sub">${delta>=0?`Saves about ${money(delta)}/mo`:`About ${money(-delta)}/mo above current plan`} · ${added?'Adds 1 phone line · ':''}${S.fan==='yes'&&o.c.premium?'FAN applied · ':S.sig==='yes'?'Signature applied · ':''}${APNAME[targetAP()]} AutoPay</div>
+   ${value?'<div class="valuewarn">Value 2.0 is a price-focused option and does not qualify for many stronger trade-in promotions. Existing post-3/12/26 installment promos also require review before moving an affected line to Value.</div>':''}
+   <button class="selectBtn" onclick="selectRerate(${i})">Select this rerate</button>
+  </div>`
+ }).join('');
+ window._opts=opts;$('results').classList.remove('hidden');$('results').scrollIntoView({behavior:'smooth'});
 }
-function labelCounts(c){
-  return ['premium','extra','value'].filter(p=>c[p]).map(p=>`${c[p]} ${PLAN_LABEL[p]}`).join(' + ');
+window.selectRerate=i=>{
+ S.selected=window._opts[i];
+ if(hasValue(S.selected.c)){
+   S.post312=null;$('valueSafety').classList.remove('hidden');$('builder').classList.add('hidden');$('valueSafety').scrollIntoView({behavior:'smooth'});
+ }else openBuilder();
 }
-function generateCombos(totalLines){
-  const a=[];
-  for(let p=0;p<=totalLines;p++) for(let e=0;e<=totalLines-p;e++){
-    const v=totalLines-p-e; if(p+e+v===totalLines) a.push({premium:p,extra:e,value:v});
-  }
-  return a;
+$('continueValue').onclick=openBuilder;
+
+function dataDiscount(base){
+ // Premium 2.0 gets 50% off. Otherwise Signature gets 20% off a data device.
+ if(S.selected.c.premium>0)return base*.5;
+ if(S.sig==='yes')return base*.8;
+ return base;
 }
-
-document.getElementById('explore').onclick=()=>{
-  const old=parseFloat(document.getElementById('oldPrice').value);
-  const n=parseInt(document.getElementById('lines').value);
-  const oldPlan=document.getElementById('oldPlan').value;
-  if(!old||!n){alert('Enter the current plan price and number of phone lines first.');return}
-  if(!state.ap){alert('Choose the current AutoPay payment method.');return}
-  if(!state.fan){alert('Tell me whether the account already has a FAN.');return}
-  if(state.fan==='no' && !state.addFan){alert('Tell me whether you want to add a FAN if they qualify.');return}
-
-  const hasFan = state.fan==='yes' || state.addFan==='yes';
-
-  if(!hasFan){
-    if(!state.signature){alert('Tell me whether the account already has Signature savings.');return}
-    if(state.signature==='no' && !state.addSignature){alert('Tell me whether you want to add Signature savings if they qualify.');return}
-  }
-  const hasSignature = !hasFan && (state.signature==='yes' || state.addSignature==='yes');
-
-  if(!state.ap){alert('Choose the customer\'s current AutoPay method.');return}
-  if(state.ap!=='bank' && !state.improveAp){alert('Tell me whether you want to improve AutoPay for the rerate.');return}
-  const apTarget = (state.ap!=='bank' && state.improveAp==='yes') ? 'bank' : state.ap;
-  let all=[];
-
-  const lineCounts=[n];
-  if(n<5) lineCounts.push(n+1);
-
-  lineCounts.forEach(total=>{
-    generateCombos(total).forEach(counts=>{
-      const price=planTotal(counts,total,apTarget,hasFan,hasSignature);
-      const hasPremium=counts.premium>0, hasExtra=counts.extra>0;
-      const promoClass=hasPremium||hasExtra?'best-trade':'value-tier';
-      all.push({counts,total,price,promoClass,added:total>n});
-    });
-  });
-
-  // Prefer solutions that save, then those within $20 of current cost, and retain plan variety.
-  all.sort((a,b)=>a.price-b.price);
-  const candidates=[];
-  const seen=new Set();
-  for(const o of all){
-    const key=`${o.total}-${o.counts.premium}-${o.counts.extra}-${o.counts.value}`;
-    if(seen.has(key))continue;
-    if(o.price<=old+20){candidates.push(o);seen.add(key)}
-  }
-
-  // Pick useful training options rather than only the absolute cheapest Value configuration.
-  const useful=[];
-  const pushFirst=(fn)=>{const x=candidates.find(fn); if(x&&!useful.includes(x)) useful.push(x)}
-  pushFirst(o=>o.total===n && o.counts.premium===n);
-  pushFirst(o=>o.total===n && o.counts.extra===n);
-  pushFirst(o=>o.total===n && o.counts.value===n);
-  if(n<5){
-    pushFirst(o=>o.total===n+1 && o.counts.premium===n && o.counts.value===1);
-    pushFirst(o=>o.total===n+1 && o.counts.premium===n+1);
-    pushFirst(o=>o.total===n+1 && o.counts.value===n+1);
-  }
-  candidates.forEach(o=>{if(useful.length<7&&!useful.includes(o)) useful.push(o)});
-
-  const best=useful.reduce((a,b)=>b.price<a.price?b:a,useful[0]||all[0]);
-  const room=old-best.price;
-  const currentApSavings=AP_PER_LINE[state.ap]||0;
-  const targetApSavings=AP_PER_LINE[apTarget]||0;
-  const apExtra=(targetApSavings-currentApSavings)*n;
-
-  const apNames={bank:'Bank account',debit:'Debit card',credit:'Credit card',none:'No AutoPay'};
-  const apName=apNames[state.ap], apTargetName=apNames[apTarget];
-  document.getElementById('summary').innerHTML=`
-    <div class="big">${room>=0?money(room):money(Math.abs(room))}/mo</div>
-    <div class="save">${room>=0?'potential room found':'over current plan price'}</div>
-    <div class="grid">
-      <div class="metric"><small>Current plan-only price</small><b>${money(old)}</b></div>
-      <div class="metric"><small>Lowest surfaced option</small><b>${money(best.price)}</b></div>
-    </div>
-    <div class="tag">AutoPay path: ${apName} today → ${apTargetName} for rerate</div>
-    ${apExtra>0?`<div class="tag">AutoPay change creates ${money(apExtra)}/mo more room across ${n} line${n===1?'':'s'}</div>`:`<div class="tag">AutoPay unchanged for this rerate</div>`}
-  `;
-
-  document.getElementById('options').innerHTML=useful.map(o=>{
-    let title,why;
-    title=labelCounts(o.counts);
-    const bits=[];
-    if(o.added)bits.push('adds 1 phone line');
-    if(hasSignature) bits.push('Signature applied');
-    else if(hasFan && o.counts.premium>0) bits.push('FAN applied to Premium 2.0');
-    bits.push(`${apTargetName} AutoPay`);
-    if(o.promoClass==='best-trade')bits.push('contains Premium/Extra — check best trade eligibility in GTT/CCKM');
-    else bits.push('Value 2.0 may reduce some trade promos');
-    why=bits.join(' · ');
-    const delta=old-o.price;
-    return `<div class="option">
-      <span class="price">${money(o.price)}/mo</span>
-      <strong>${title}</strong>
-      <div class="sub">${delta>=0?`Saves about ${money(delta)}/mo vs current plan-only price.`:`About ${money(-delta)}/mo above current plan-only price.`}<br>${why}</div>
-    </div>`;
-  }).join('');
-
-  const mr=document.getElementById('maxResult');
-  if(retired.has(oldPlan) && state.max==='yes'){
-    mr.innerHTML='<b>HBO Max safeguard:</b> This customer would lose included HBO Max by leaving the retired plan. Treat that as real lost value before recommending a rerate.';
-    mr.classList.remove('hidden');
-  }else if(retired.has(oldPlan) && state.max==='unsure'){
-    mr.innerHTML='<b>Check before rerating:</b> Confirm whether the retired plan includes HBO Max or another grandfathered benefit the customer would lose.';
-    mr.classList.remove('hidden');
-  }else mr.classList.add('hidden');
-
-  const r=document.getElementById('results');r.classList.remove('hidden');
-  r.scrollIntoView({behavior:'smooth',block:'start'});
-};
-</script>
-</body>
-</html>
+function aia(){
+ const a=targetAP();return a==='bank'?20:a==='debit'?25:30;
+}
+function openBuilder(){
+ const o=S.selected,old=parseFloat($('oldPrice').value),n=parseInt($('lines').value),save=old-o.price;
+ $('builderTitle').textContent=title(o.c);
+ $('mOld').textContent=money(old);$('mNew').textContent=money(o.price);$('mSave').textContent=money(save);
+ $('already').innerHTML=(o.n>n?'<b>Value already added:</b> ✓ Additional phone line':'<b>Selected rerate:</b> no added phone line')+(o.c.premium?'<br>✓ Premium lines preserve the stronger promotional path':'');
+ $('aiaPrice').textContent=`+${money(aia())}/mo based on rerate AutoPay`;
+ $('watchPrice').textContent=`Service ${money(dataDiscount(10.99))}/mo + installment`;
+ $('tabletPrice').textContent=`Service ${money(dataDiscount(20.99))}/mo + installment`;
+ $('builder').classList.remove('hidden');updateBuilder();$('builder').scrollIntoView({behavior:'smooth'});
+}
+document.querySelectorAll('[data-add]').forEach(x=>x.onchange=()=>{x.closest('.add').classList.toggle('on',x.checked);updateBuilder()});
+['watchInst','tabInst','otherInst'].forEach(id=>$(id).oninput=updateBuilder);
+function checked(k){return document.querySelector(`[data-add="${k}"]`).checked}
+function updateBuilder(){
+ if(!S.selected)return;
+ const old=parseFloat($('oldPrice').value),base=S.selected.price;
+ let adds=0,items=[];
+ if(checked('pa1')){adds+=19;items.push(['PA1',19])}
+ if(checked('htp')){adds+=25;items.push(['HTP',25])}
+ if(checked('aia')){let x=aia();adds+=x;items.push(['AIA',x])}
+ if(checked('watch')){let x=dataDiscount(10.99)+(parseFloat($('watchInst').value)||0);adds+=x;items.push(['Watch',x])}
+ if(checked('tablet')){let x=dataDiscount(20.99)+(parseFloat($('tabInst').value)||0);adds+=x;items.push(['Tablet',x])}
+ if(checked('installment')){let x=parseFloat($('otherInst').value)||0;adds+=x;items.push(['Other installment',x])}
+ const final=base+adds,room=old-final;
+ $('roomAmount').textContent=money(Math.abs(room));
+ $('roomCaption').textContent=room>=0?'SAVINGS REMAINING':'ADDITIONAL CUSTOMER INVESTMENT';
+ $('roomAmount').style.color=room>=0?'var(--green)':'var(--amber)';
+ let lines=[['Original plan',money(old)],['Selected rerate',money(base)]];
+ if(S.selected.n>parseInt($('lines').value))lines.push(['Value already added','+ 1 phone line']);
+ items.forEach(([a,b])=>lines.push([a,'+'+money(b)]));
+ lines.push(['New estimated total',money(final)]);
+ lines.push([room>=0?'Still saves':'Above original',money(Math.abs(room))+'/mo']);
+ $('story').innerHTML=lines.map((x,i)=>`<div class="storyline"><span>${x[0]}</span><b class="${i===lines.length-1?(room>=0?'positive':'over'):''}">${x[1]}</b></div>`).join('');
+}
+</script></body></html>
