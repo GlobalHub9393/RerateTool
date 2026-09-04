@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rerate Explorer — Prototype</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--line:#e4e7ec;--shadow:0 10px 30px rgba(16,24,40,.08)}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:760px;margin:auto;padding:18px 14px 60px}.hero{background:linear-gradient(135deg,#052e4f,#0676bd);color:white;padding:22px;border-radius:22px;box-shadow:var(--shadow)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.8}.hero h1{margin:5px 0 7px;font-size:30px}.hero p{margin:0;line-height:1.45;opacity:.9}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px;box-shadow:var(--shadow)}
+.step{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}.card h2{font-size:20px;margin:5px 0 6px}.hint{font-size:14px;color:var(--muted);line-height:1.45;margin:0 0 15px}
+label{display:block;font-size:13px;font-weight:750;margin:13px 0 6px}.field{display:flex;align-items:center;border:1px solid #cfd5df;border-radius:13px;background:white;overflow:hidden}
+.prefix{padding-left:14px;font-weight:800;color:#475467}.field input,.field select{width:100%;border:0;outline:0;font-size:18px;padding:13px;background:transparent;color:var(--ink)}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choice{border:1px solid #cfd5df;background:white;border-radius:13px;padding:12px 10px;font-weight:700;font-size:14px;text-align:center;cursor:pointer}
+.choice.active{border:2px solid var(--blue);background:var(--blue2);color:#034b7b;padding:11px 9px}
+.hidden{display:none!important}.notice{border-radius:14px;padding:12px 13px;margin-top:12px;font-size:14px;line-height:1.4}.notice.blue{background:var(--blue2);color:#074d7d}.notice.amber{background:var(--amberbg);color:#7a2e0e}
+button.primary{width:100%;border:0;border-radius:14px;background:var(--blue);color:white;font-size:16px;font-weight:800;padding:14px;margin-top:16px;cursor:pointer}
+.result{background:#061d2d;color:white;border:0}.result .step{color:#7dd3fc}.big{font-size:38px;font-weight:850;margin:8px 0 0}.save{display:inline-block;background:#d1fadf;color:#05603a;font-weight:850;border-radius:999px;padding:7px 10px;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.metric{background:rgba(255,255,255,.08);border-radius:14px;padding:12px}.metric small{display:block;color:#b8c7d2}.metric b{font-size:18px}
+.option{border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:10px}.option strong{font-size:16px}.option .price{float:right;color:var(--green);font-weight:850}
+.footer{font-size:12px;color:var(--muted);line-height:1.45;margin-top:14px;text-align:center}
+@media(max-width:480px){.hero h1{font-size:27px}.grid{grid-template-columns:1fr}.choices{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="eyebrow">Standalone prototype</div>
+<h1>Rerate Explorer</h1>
+<p>Find room in the customer's plan before you build the sale. This is an exploration/training tool — verify the final rerate in MST.</p>
+</section>
+
+<section class="card">
+<div class="step">Step 1 · Starting point</div>
+<h2>What are they paying now?</h2>
+<p class="hint">Use plan/service pricing only. Don't include installments, insurance, taxes, or other features.</p>
+<label>Current plan price</label>
+<div class="field"><span class="prefix">$</span><input id="oldPrice" type="number" inputmode="decimal" placeholder="167.97" step=".01"></div>
+<label>Phone lines</label>
+<div class="field"><select id="lines"><option value="">Select lines</option><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+<label>Current plan family (optional)</label>
+<div class="field"><select id="oldPlan"><option value="">Unknown / legacy plan</option><option>Starter SL</option><option>Value 2.0</option><option>Extra 2.0</option><option>Premium 2.0</option><option>Elite 2.0</option></select></div>
+</section>
+
+<section class="card">
+<div class="step">Step 2 · Savings check</div>
+<h2>Look for the rerate</h2>
+<p class="hint">These answers change which current-plan configurations are worth checking.</p>
+
+<label>Does the account already have Signature / FAN savings?</label>
+<div class="choices" data-group="fan"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div>
+
+<div id="fanFollow" class="hidden">
+<label>Could the customer qualify?</label>
+<div class="choices" data-group="eligible"><button class="choice" data-v="yes">Yes / likely</button><button class="choice" data-v="no">No / unsure</button></div>
+<div class="notice blue">Ask about employer, union membership, school/student eligibility, and other qualifying affiliations. Verify eligibility before changing the account.</div>
+</div>
+
+<label>AutoPay / paperless payment method</label>
+<div class="choices" data-group="ap"><button class="choice" data-v="bank">Bank account</button><button class="choice" data-v="debit">Debit card</button><button class="choice" data-v="credit">Credit card</button><button class="choice" data-v="none">Not enrolled / unsure</button></div>
+
+<div id="apTip" class="notice amber hidden">There may be additional room here. Current AT&T public pricing advertises the full $10/line AutoPay + paperless discount with a bank account or eligible AT&T Points Plus Card. Verify the account's actual eligibility.</div>
+
+<label>Would an additional phone line be useful if the total still made sense?</label>
+<div class="choices" data-group="addline"><button class="choice" data-v="yes">Yes / explore it</button><button class="choice" data-v="no">No</button></div>
+
+<button class="primary" id="explore">Explore current plans</button>
+</section>
+
+<section id="results" class="card result hidden">
+<div class="step">Exploration result</div>
+<h2 style="margin-bottom:4px">Configurations worth checking</h2>
+<p style="color:#c8d7e2;margin-top:0">These are leads for MST, not an account quote.</p>
+<div id="summary"></div>
+<div id="options"></div>
+</section>
+
+<section class="card">
+<div class="step">Training principle</div>
+<h2>Don't stop at “I saved you money.”</h2>
+<p class="hint">A good rerate can create room for something the customer actually values: another line, better device eligibility, protection, Next Up, or home internet — while potentially keeping their total near or below what they expected to spend.</p>
+</section>
+<div class="footer">Prototype pricing engine intentionally uses editable demo pricing assumptions. Confirm current AT&T pricing, discounts, eligibility and final account totals in approved AT&T systems before presenting a rerate.</div>
+</div>
+<script>
+const state={fan:null,eligible:null,ap:null,addline:null};
+document.querySelectorAll('.choices').forEach(g=>{
+ g.addEventListener('click',e=>{
+  const b=e.target.closest('.choice'); if(!b)return;
+  g.querySelectorAll('.choice').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  state[g.dataset.group]=b.dataset.v;
+  if(g.dataset.group==='fan') document.getElementById('fanFollow').classList.toggle('hidden',b.dataset.v!=='no');
+  if(g.dataset.group==='ap') document.getElementById('apTip').classList.toggle('hidden',b.dataset.v==='bank');
+ });
+});
+
+// Prototype current-plan matrix. Replace with maintained database values once we validate internal pricing.
+const base={
+  1:{premium:60,extra:50,value:40},
+  2:{premium:110,extra:90,value:70},
+  3:{premium:150,extra:120,value:90},
+  4:{premium:200,extra:160,value:120},
+  5:{premium:250,extra:200,value:150},
+  6:{premium:300,extra:240,value:180},
+  7:{premium:350,extra:280,value:210},
+  8:{premium:400,extra:320,value:240},
+  9:{premium:450,extra:360,value:270},
+ 10:{premium:500,extra:400,value:300}
+};
+function money(n){return '$'+n.toFixed(2).replace('.00','')}
+function sigPrice(plan, price, sig){
+ if(!sig)return price;
+ const pct={premium:.20,extra:.15,value:.10}[plan]||0;
+ return price*(1-pct);
+}
+document.getElementById('explore').onclick=()=>{
+ const old=parseFloat(document.getElementById('oldPrice').value);
+ const n=parseInt(document.getElementById('lines').value);
+ if(!old||!n){alert('Enter the current plan price and number of phone lines first.');return}
+ const sig=state.fan==='yes'||(state.fan==='no'&&state.eligible==='yes');
+ let opts=[];
+ ['premium','extra','value'].forEach(p=>{
+   let price=sigPrice(p,base[n][p],sig);
+   opts.push({label:`${n} lines · ${p[0].toUpperCase()+p.slice(1)} 2.0`,price,why:sig?'Includes prototype Signature savings':'Current-plan comparison'});
+ });
+ if(state.addline==='yes'&&n<10){
+   // Simple mixed-plan exploration: existing lines Premium + one Value.
+   let prem=sigPrice('premium',base[n+1].premium,sig);
+   let allValue=sigPrice('value',base[n+1].value,sig);
+   // illustrative mixed estimate from per-line average; to be replaced by exact matrix
+   let mixed=(prem/(n+1))*n+(allValue/(n+1));
+   opts.push({label:`${n} Premium 2.0 + 1 Value 2.0`,price:mixed,why:'Adds a line while exploring mixed-plan savings'});
+ }
+ opts.sort((a,b)=>a.price-b.price);
+ const interesting=opts.filter(o=>o.price<old+15).slice(0,5);
+ const best=interesting[0]||opts[0], room=old-best.price;
+ document.getElementById('summary').innerHTML=`<div class="big">${room>0?money(room):money(Math.abs(room))}/mo</div><div class="save">${room>0?'potential room created':'above current plan price'}</div><div class="grid"><div class="metric"><small>Current plan-only price</small><b>${money(old)}</b></div><div class="metric"><small>Lowest configuration surfaced</small><b>${money(best.price)}</b></div></div>`;
+ document.getElementById('options').innerHTML=interesting.map(o=>`<div class="option"><span class="price">${money(o.price)}/mo</span><strong>${o.label}</strong><div style="font-size:13px;color:#b8c7d2;margin-top:5px">${o.why} · Verify in MST</div></div>`).join('');
+ document.getElementById('results').classList.remove('hidden');
+ document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+};
+</script>
+</body></html>
