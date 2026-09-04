@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rerate Explorer v0.63</title>
+<title>Rerate Explorer v0.64</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--dark:#061d2d;--shadow:0 10px 30px rgba(16,24,40,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -12,6 +12,7 @@
 label{display:block;font-size:13px;font-weight:780;margin:13px 0 6px}.field{display:flex;align-items:center;border:1px solid #cfd5df;border-radius:13px;background:#fff;overflow:hidden}.prefix{padding-left:14px;font-weight:850;color:#475467}.field input,.field select{width:100%;border:0;outline:0;font-size:17px;padding:13px;background:transparent;color:var(--ink)}
 .choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.choice{border:1px solid #cfd5df;background:#fff;border-radius:13px;padding:12px 9px;font-weight:750;font-size:14px;text-align:center;cursor:pointer}.choice.active{border:2px solid var(--blue);background:var(--blue2);color:#034b7b;padding:11px 8px}
 .hidden{display:none!important}.notice{border-radius:14px;padding:12px 13px;margin-top:12px;font-size:14px;line-height:1.42}.blue{background:var(--blue2);color:#074d7d}.amber{background:var(--amberbg);color:#7a2e0e}.red{background:var(--redbg);color:#8a1c13}
+.resetBtn{position:fixed;right:16px;bottom:18px;z-index:50;border:0;border-radius:999px;background:#fff;color:#0568ae;font-size:14px;font-weight:850;padding:11px 15px;box-shadow:0 8px 24px rgba(16,24,40,.18);border:1px solid #d0d5dd;cursor:pointer}.resetBtn:active{transform:scale(.98)}
 button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(--blue);color:#fff;font-size:16px;font-weight:850;padding:14px;margin-top:16px;cursor:pointer}.selectBtn{margin-top:10px;padding:11px;font-size:14px}
 .results{background:var(--dark);color:#fff;border:0}.results .step{color:#7dd3fc}.option{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);border-radius:16px;padding:14px;margin-top:10px}.option.best{border:2px solid #86efac;background:rgba(134,239,172,.08)}.option h3{margin:0 0 4px;font-size:17px}.price{font-size:24px;font-weight:880;color:#86efac}.sub{font-size:13px;color:#c4d3dd;line-height:1.4}.badge{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;letter-spacing:.06em;margin-bottom:8px;background:#d1fadf;color:#05603a}.valuewarn{margin-top:9px;padding:9px;border-radius:10px;background:#3b2a0f;color:#fde68a;font-size:12px;line-height:1.4}
 .builder{border:2px solid #bae6fd}.moneyHero{text-align:center;padding:10px 0}.moneyHero .amount{font-size:42px;font-weight:900;color:var(--green)}.moneyHero .caption{font-size:13px;color:var(--muted)}
@@ -24,7 +25,7 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 </style>
 </head>
 <body><div class="wrap">
-<section class="hero"><div class="eyebrow">Training prototype · v0.63</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
+<section class="hero"><div class="eyebrow">Training prototype · v0.64</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
 
 <section class="card">
 <div class="step">1 · Current account</div><h2>What are they paying now?</h2><p class="hint">Enter the current monthly plan/service price and the lines on the account. No installments, protection or taxes.</p>
@@ -87,6 +88,7 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 
 <div class="story"><h3>What did we build?</h3><div id="story"></div></div>
 </section>
+<button id="resetBtn" class="resetBtn" type="button">↻ Start Over</button>
 <div class="footer">Training/exploration only. Final plan pricing, discounts, HBO Max impact, installments, promotional credits and account eligibility must be verified in MST/OPUS/CCKM.</div>
 </div>
 
@@ -374,4 +376,44 @@ function updateBuilder(){
  lines.push([room>=0?'Still saves':'Above original',money(Math.abs(room))+'/mo']);
  $('story').innerHTML=lines.map((x,i)=>`<div class="storyline"><span>${x[0]}</span><b class="${i===lines.length-1?(room>=0?'positive':'over'):''}">${x[1]}</b></div>`).join('');
 }
+
+$('resetBtn').onclick=()=>{
+ // Core state
+ Object.assign(S,{fanType:null,appreciation:null,ap:null,useBank:null,max:null,post312:null,selected:null});
+ NEW.watch=0;NEW.tablet=0;
+ window._opts=[];
+
+ // Inputs
+ $('oldPrice').value='';
+ $('lines').value='3';
+ $('watchLines').value='0';
+ $('tabletLines').value='0';
+
+ // Choice buttons
+ document.querySelectorAll('.choice').forEach(x=>x.classList.remove('active'));
+
+ // Conditional discovery UI
+ $('appreciationBlock').classList.add('hidden');
+ $('apImprove').classList.add('hidden');
+ $('maxWarn').classList.add('hidden');
+
+ // Results / safety / builder
+ $('results').classList.add('hidden');
+ $('optionList').innerHTML='';
+ $('valueSafety').classList.add('hidden');
+ $('valueBlock').classList.add('hidden');
+ $('continueValue').classList.add('hidden');
+ $('builder').classList.add('hidden');
+
+ // Builder additions
+ document.querySelectorAll('[data-add]').forEach(x=>{x.checked=false;x.disabled=false;x.closest('.add')?.classList.remove('on')});
+ $('watchQty').textContent='0';$('tabletQty').textContent='0';
+ $('watchInstList').innerHTML='';$('tabletInstList').innerHTML='';
+ $('watchInstList').classList.add('hidden');$('tabletInstList').classList.add('hidden');
+
+ // Return to the beginning.
+ window.scrollTo({top:0,behavior:'smooth'});
+ setTimeout(()=>$('oldPrice').focus({preventScroll:true}),550);
+};
+
 </script></body></html>
