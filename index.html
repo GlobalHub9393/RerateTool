@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rerate Explorer v0.6</title>
+<title>Rerate Explorer v0.61</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#142033;--muted:#667085;--blue:#0568ae;--blue2:#eaf5ff;--green:#067647;--greenbg:#ecfdf3;--amber:#b54708;--amberbg:#fffaeb;--red:#b42318;--redbg:#fef3f2;--line:#e4e7ec;--dark:#061d2d;--shadow:0 10px 30px rgba(16,24,40,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -23,7 +23,7 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 </style>
 </head>
 <body><div class="wrap">
-<section class="hero"><div class="eyebrow">Training prototype · v0.6</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
+<section class="hero"><div class="eyebrow">Training prototype · v0.61</div><h1>Rerate Explorer</h1><p>Find a better account structure first. Then use the room you created to build more customer value.</p></section>
 
 <section class="card">
 <div class="step">1 · Current account</div><h2>What are they paying now?</h2><p class="hint">Enter the current monthly plan/service price and the lines on the account. No installments, protection or taxes.</p>
@@ -38,7 +38,7 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 <section class="card">
 <div class="step">2 · Discovery</div><h2>Find the rerate</h2>
 <label>FAN eligible?</label>
-<div class="choices" data-group="fanType"><button class="choice" data-v="fan">FAN</button><button class="choice" data-v="55">55+</button><button class="choice" data-v="none">No</button></div>
+<div class="choices" data-group="fanType"><button class="choice" data-v="fan">FAN</button><button class="choice" data-v="55">55+ / FAN</button><button class="choice" data-v="none">No</button></div>
 <div id="appreciationBlock" class="hidden"><label>Appreciation offer eligible?</label><div class="choices" data-group="appreciation"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button></div></div>
 <label>Current AutoPay method</label><div class="choices" data-group="ap"><button class="choice" data-v="bank">Bank · $10/line</button><button class="choice" data-v="debit">Debit · $5/line</button><button class="choice" data-v="credit">Credit · $0</button><button class="choice" data-v="none">No AP · $0</button></div>
 <div id="apImprove" class="hidden"><label>Use bank AutoPay for the rerate?</label><div class="choices" data-group="useBank"><button class="choice" data-v="yes">Yes — maximize savings</button><button class="choice" data-v="no">No — keep current</button></div></div>
@@ -47,7 +47,7 @@ button.primary,.selectBtn{width:100%;border:0;border-radius:14px;background:var(
 <button id="findBtn" class="primary">Find rerates</button>
 </section>
 
-<section id="results" class="card results hidden"><div class="step">3 · Opportunities</div><h2>Top-down rerates to explore</h2><p class="sub">Premium first. +1 line is searched automatically. Value is treated as a price play, not the default winner.</p><div id="optionList"></div></section>
+<section id="results" class="card results hidden"><div class="step">3 · Opportunities</div><h2>Top-down rerates to explore</h2><p class="sub">Premium first. +1 line is searched automatically. 55+ eligibility tests both the special 55+ package and normal FAN pricing on Premium. Value is treated as a price play, not the default winner.</p><div id="optionList"></div></section>
 
 <section id="valueSafety" class="card hidden"><div class="step">Value 2.0 safeguard</div><h2>Existing device promotions</h2><p class="hint">This check appears only because a Value 2.0 rerate was selected.</p>
 <label>Does any affected line have an installment that started after 3/12/26?</label><div class="choices" data-group="post312"><button class="choice" data-v="yes">Yes</button><button class="choice" data-v="no">No</button><button class="choice" data-v="unsure">Unsure</button></div>
@@ -105,7 +105,7 @@ document.querySelectorAll('.choices').forEach(g=>g.onclick=e=>{
 function targetAP(){return S.ap!=='bank'&&S.useBank==='yes'?'bank':S.ap}
 function rateLines(n){return Math.min(n,4)}
 function disc(plan){
- if(S.fanType==='fan')return plan==='premium'?.20:0;
+ if(S.fanType==='fan' || S.fanType==='55')return plan==='premium'?.20:0;
  if(S.appreciation==='yes')return SIG[plan]||0;
  return 0;
 }
@@ -207,7 +207,7 @@ $('findBtn').onclick=()=>{
    }
    const nm=o.elite?`${o.n} Elite 2.0`:title(o.c);
    const value=!o.elite&&hasValue(o.c);
-   const dataNote=o.elite?'Includes 1 free watch + 1 free tablet':(o.c.premium?`Premium can discount up to ${o.c.premium} highest-priced data line${o.c.premium===1?'':'s'} by 50%`:'');
+   const dataNote=o.elite?'Includes 1 free watch + 1 free tablet':(o.c.premium?`${S.fanType==='55'?'55+ eligibility uses normal 20% FAN pricing on Premium · ':''}Premium can discount up to ${o.c.premium} highest-priced data line${o.c.premium===1?'':'s'} by 50%`:'');
    return `<div class="option ${i===0?'best':''}">
      ${i===0?'<div class="badge">BEST OPPORTUNITY</div>':''}
      <h3>${nm}</h3><div class="price">${money(o.price)}/mo</div>
